@@ -1,6 +1,6 @@
-import OpenAI from "openai";
+const OpenAI = require("openai");
 
-module.exports = async (req, res) => {
+module.exports = async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
@@ -20,8 +20,9 @@ module.exports = async (req, res) => {
     });
 
     res.status(200).json({
-      output: response.choices[0].message.content,
+      output: response.choices[0].message.content
     });
+
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "AI request failed" });
