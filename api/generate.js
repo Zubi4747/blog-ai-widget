@@ -1,8 +1,12 @@
 import OpenAI from "openai";
 
+// Initialize OpenAI client
 const client = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
+
+// Simple in-memory cache
+const cache = new Map();
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -10,14 +14,58 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { topic, type } = req.body;
+    const {
+      topic,
+      type,
+      count = 1,
+      max_words = 150,
+      tone = "neutral",
+      style = "informative",
+      keywords = []
+    } = req.body;
 
-    const response = await client.responses.create({
-      model: "gpt-4o-mini",
-      input: `Write a ${type} about ${topic}`,
+    if (!topic || !type) {
+      return res.status(400).json({ error: "Missing 'topic' or 'type'" });
+    }
+
+    // Generate a unique cache key based on input
+    const cacheKey = JSON.stringify({ topic, type, count, max_words, tone, style, keywords });
+
+    // Check if result is cached
+    if (cache.has(cacheKey)) {
+      return res.status(200).json({
+        success: true,
+        cached: true,
+        outputs: cache.get(cacheKey)
+      });
+    }
+
+    const outputs = [];
+
+    for (let i = 0; i < count; i++) {
+      let prompt = `Write a ${type} about "${topic}" in under ${max_words} words. `;
+      prompt += `Tone: ${tone}. Style: ${style}. `;
+      if (keywords.length > 0) {
+        prompt += `Include keywords: ${keywords.join(", ")}.`;
+      }
+
+      const response = await client.responses.create({
+        model: "gpt-4o-mini",
+        input: prompt,
+      });
+
+      outputs.push(response.output_text);
+    }
+
+    // Store result in cache
+    cache.set(cacheKey, outputs);
+
+    res.status(200).json({
+      success: true,
+      cached: false,
+      outputs
     });
 
-    res.status(200).json({ output: response.output_text });
   } catch (err) {
     console.error("API error:", err);
     res.status(500).json({ error: "Something went wrong" });
