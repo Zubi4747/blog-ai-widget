@@ -1,8 +1,11 @@
 {
   "name": "blog-ai-widget",
   "version": "1.0.0",
-  "type": "module",
+  "main": "api/generate.js",
+  "scripts": {
+    "start": "vercel dev"
+  },
   "dependencies": {
-    "openai": "^4.0.0"
+    "openai": "^5.2.0"
   }
 }

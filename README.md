@@ -1,26 +1,17 @@
 # Blog AI Widget (Vercel + OpenAI)
 
-This project is a serverless API that powers a floating AI chat widget for Blogger/WordPress.  
+[![Vercel](https://img.shields.io/badge/deploy-vercel-000000?logo=vercel&logoColor=white)](https://vercel.com/new)  
+[![OpenAI](https://img.shields.io/badge/OpenAI-API-blue)](https://platform.openai.com/)
+
+A serverless API that powers a floating AI chat widget for Blogger or WordPress.  
 It securely connects to OpenAI without exposing your API key.
 
-## 🚀 Deploy to Vercel
+---
 
-1. Fork this repo or download it.
-2. Push it to your GitHub.
-3. Go to [Vercel](https://vercel.com), import this repo.
-4. Add an **Environment Variable** in Vercel:
-   - `OPENAI_API_KEY = your_openai_api_key`
-5. Deploy 🎉
+## 🚀 Quick Start
 
-Your endpoint will be:
-```
-https://your-app.vercel.app/api/generate
-```
-
-Use this inside your Blogger widget.
-
-## 🛠 Example Request
+1. **Clone or fork this repository**
 
 ```bash
-curl -X POST https://your-app.vercel.app/api/generate   -H "Content-Type: application/json"   -d '{"topic":"AI tools for bloggers","type":"chat"}'
-```
+git clone https://github.com/zubi4747/blog-ai-widget.git
+cd blog-ai-widget
